@@ -1,21 +1,21 @@
 start:
 	say "Hello I'm Costo!"
 	say "I'm here to help you with get an overview on your AWS costs."
-	goto getstarted
+	goto select
 
-getstarted:
+select:
 	use Button("Explore my costs", accept=["costs", "cost", "explorer"]) as btnexp
 	use Button("Get a forecast", accept=["forecast", "preview"]) as btnfcst
 	use Button("Who are you?", accept=["help"]) as btnhelp
 	use Button("Nothing, I'm good", accept=["nothing"]) as btnbye
-	
+
 	say Question("What are you looking for?", buttons=[btnexp, btnfcst, btnhelp, btnbye])
 	hold
 
-	if (event match btnexp) goto flow getCost
-	else if (event match btnfcst) goto flow getForecast
+	if (event match btnexp) goto getcost
+	else if (event match btnfcst) goto getforecast
 	else if (event match btnhelp) goto gethelp
-	else if (event match btnbye) goto by
+	else if (event match btnbye) goto bye
 	say "I'm sorry I did not get that!"
 	goto start
 
@@ -27,7 +27,7 @@ getcosts:
 	use Button("Last month") as lm
 	say Typing(1000)
 	say Question(
-		"OK, I'm going to retrieve cost and usage data from your account in AWS Cost Explorer. What is the time period?", 
+		"OK, I'm going to retrieve cost and usage data from your account in AWS Cost Explorer. What is the time period?",
 		buttons = [tdy, mtd, ytd, lm]
 	)
 	hold
@@ -44,7 +44,7 @@ getcosts:
 	}
 	use Fn("cost_explorer", period=cost_period, action="cost") as costs
 	say "Your AWS costs over the selected period are: {{costs.Unit}} {{costs.Total}}"
-	goto getstarted
+	goto select
 
 
 getforecast:
@@ -54,7 +54,7 @@ getforecast:
 	use Button("This year") as yr
 	say Typing(1000)
 	say Question(
-		"OK, I'm going to check your cost forecast from your account in AWS Cost Explorer. What is the time period?", 
+		"OK, I'm going to check your cost forecast from your account in AWS Cost Explorer. What is the time period?",
 		buttons = [tdy, tmw, mo, yr]
 	)
 	hold
@@ -71,13 +71,13 @@ getforecast:
 
 	use Fn("cost_explorer", period=forecast_period, action="forecast") as costs
 	say "Your AWS cost forecast over the selected period is: {{costs.Unit}} {{costs.Mean}}"
-	goto getstarted
+	goto select
 
 
 gethelp:
 	say Typing(1000)
 	say "I'm a nice bot helping you find out about your costs within your AWS account. Isn't that great?"
-	goto getstarted
+	goto select
 
 
 bye:
