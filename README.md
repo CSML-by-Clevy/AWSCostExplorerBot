@@ -16,17 +16,17 @@ In order to use this chatbot, you will need a IAM user with sufficient rights to
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "ce:GetCostAndUsage",
-                "ce:GetCostForecast"
-            ],
-            "Resource": "*"
-        }
-    ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ce:GetCostAndUsage",
+                "ce:GetCostForecast"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
