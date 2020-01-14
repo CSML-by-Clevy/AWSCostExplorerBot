@@ -1,0 +1,35 @@
+{
+  "id": "5234e37a-28f8-4c79-a790-63b3214ef470",
+  "name": "AWSCostExplorerBot",
+  "description": null,
+  "default_flow": "Default",
+  "tags": [],
+  "flows": [
+    {
+      "name": "Default",
+      "description": null,
+      "commands": [],
+      "tags": []
+    }
+  ],
+  "files": [],
+  "functions": [
+    {
+      "name": "cost_explorer",
+      "description": null,
+      "args": [
+        "period=\"\""
+      ],
+      "import_url": null,
+      "runtime": "nodejs10.x",
+      "handler": "index.handler",
+      "environment": {
+        "ACCESS_KEY_ID": "",
+        "SECRET_ACCESS_KEY": ""
+      },
+      "app_id": null,
+      "version": null
+    }
+  ],
+  "apps": []
+}

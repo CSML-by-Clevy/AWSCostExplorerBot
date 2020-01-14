@@ -1,0 +1,87 @@
+start:
+	say "Hello I'm Costo!"
+	say "I'm here to help you with get an overview on your AWS costs."
+	goto getstarted
+
+getstarted:
+	use Button("Explore my costs", accept=["costs", "cost", "explorer"]) as btnexp
+	use Button("Get a forecast", accept=["forecast", "preview"]) as btnfcst
+	use Button("Who are you?", accept=["help"]) as btnhelp
+	use Button("Nothing, I'm good", accept=["nothing"]) as btnbye
+	
+	say Question("What are you looking for?", buttons=[btnexp, btnfcst, btnhelp, btnbye])
+	hold
+
+	if (event match btnexp) goto flow getCost
+	else if (event match btnfcst) goto flow getForecast
+	else if (event match btnhelp) goto gethelp
+	else if (event match btnbye) goto by
+	say "I'm sorry I did not get that!"
+	goto start
+
+getcosts:
+	use Button("Today") as tdy
+	use Button("Yesterday") as ysdy
+	use Button("Month to date") as mtd
+	use Button("Year to date") as ytd
+	use Button("Last month") as lm
+	say Typing(1000)
+	say Question(
+		"OK, I'm going to retrieve cost and usage data from your account in AWS Cost Explorer. What is the time period?", 
+		buttons = [tdy, mtd, ytd, lm]
+	)
+	hold
+
+	say Typing(1000)
+	if (event match tdy) remember "TODAY" as cost_period
+	else if (event match ysdy) remember "YESTERDAY" as cost_period
+	else if (event match mtd) remember "MTD" as cost_period
+	else if (event match ytd) remember "YTD" as cost_period
+	else if (event match lm) remember "LASTMONTH" as cost_period
+	else {
+		say "I did not get that."
+		goto start
+	}
+	use Fn("cost_explorer", period=cost_period, action="cost") as costs
+	say "Your AWS costs over the selected period are: {{costs.Unit}} {{costs.Total}}"
+	goto getstarted
+
+
+getforecast:
+	use Button("Today") as tdy
+	use Button("Tomorrow") as tmw
+	use Button("This month") as mo
+	use Button("This year") as yr
+	say Typing(1000)
+	say Question(
+		"OK, I'm going to check your cost forecast from your account in AWS Cost Explorer. What is the time period?", 
+		buttons = [tdy, tmw, mo, yr]
+	)
+	hold
+
+	say Typing(1000)
+	if (event match tdy) remember "TODAY" as forecast_period
+	else if (event match tmw) remember "TOMORROW" as forecast_period
+	else if (event match mo) remember "MONTH" as forecast_period
+	else if (event match yr) remember "YEAR" as forecast_period
+	else {
+		say "I did not get that."
+		goto start
+	}
+
+	use Fn("cost_explorer", period=forecast_period, action="forecast") as costs
+	say "Your AWS cost forecast over the selected period is: {{costs.Unit}} {{costs.Mean}}"
+	goto getstarted
+
+
+gethelp:
+	say Typing(1000)
+	say "I'm a nice bot helping you find out about your costs within your AWS account. Isn't that great?"
+	goto getstarted
+
+
+bye:
+	say Typing(1000)
+	say "OK! Ping me whenever you need me!"
+	goto end
+
